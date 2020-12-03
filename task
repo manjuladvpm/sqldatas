@@ -1,0 +1,122 @@
+1.Setup a local database, create a table, insert some records using any database client 
+
+#Setup a local database:
+
+CREATE DATABASE njc_labs
+ 
+#Create a table:
+USE njc_labs
+CREATE TABLE student_name(
+ID No int,
+fname varchar(150),
+lname varchar(50),
+course varchar(255),
+duration varchar(50),
+address varchar(255),
+city varchar(255)
+);
+
+#Another Table:
+
+CREATE TABLE employee_list(
+fname varchar(150)
+lname varchar(50)
+gender varchar(150)
+designation varchar(255)
+city varchar(150)
+);
+
+#Inset Table :
+
+INSERT INTO student_name (fname,lname,course,duration,address,city) VALUES (Sheela,mery,java,2,5/210 -2edmainrode,Chennai)
+
+INSERT INTO employee_list VALUES(Nantha,kumr,male,software developer,Chennai)
+
+
+#2.Write SQL to inset and retaieve recoreds from the above table using the same database client
+
+
+INSERT INTO employee_list (fname,lname,city) SELECT fname,lname,city FROM student_list WHERE city=’Chennai’;
+
+
+
+#3.Write java/python code to insert and retrieve the records from the database table. 
+
+import mysql.connector
+
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="yourusername",
+  password="yourpassword",
+  database="mydatabase"
+)
+
+mycursor = mydb.cursor()
+
+mycursor.execute("CREATE TABLE student_name (name VARCHAR(255), address VARCHAR(255))")
+mycursor.execute("CREATE TABLE employee_list (name VARCHAR(255), address VARCHAR(255))")
+
+#Insert:
+
+sql = "INSERT INTO student_name (name, address) VALUES (%s, %s)"
+val = ("John", "Highway 21")
+mycursor.execute(sql, val)
+
+mydb.commit()
+
+#retrieve:
+
+mycursor = mydb.cursor()
+
+mycursor.execute("SELECT * FROM student_list")
+
+myresult = mycursor.fetchall()
+
+for x in myresult:
+  print(x)
+  
+  
+  #4.Create a REST API in JAVA to insert and retrieve the same records
+  
+  #models.py:
+  from django.db import models
+from django.contrib.auth.models import User
+class student(models.Model):
+    fname= models.CharField(max_length=50)
+    adress=models.CharField(max_length=100)
+    
+    #serializer.py
+    from rest_framework import serializers
+    from .models import *
+
+    class HeroSerializer(serializers.HyperlinkedModelSerializer):
+        class Meta:
+          model = Hero
+          fields = ('name', 'adress')
+    
+  #file name create api.py
+  
+  from rest_freamework.views import APIView
+  from rest_framework.response import Response
+  from serializer import *
+  
+  
+  class userlist(APIView):
+    def get(self,request):
+      model = Users.objects.all()
+      serializern =UserSerializer(model,many=True)
+      return Response(serializer.data)
+      
+      
+     def post(self,request)
+      model = Users.objects.all()
+      serializern =UserSerializer(model,data=request.data)
+      if serializer.is_valied()
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+       
+      return Response(serializer.errors status=statusHTTP_400_BAD_REQUEST)
+      
+     
+     
+
